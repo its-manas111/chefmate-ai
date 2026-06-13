@@ -3,63 +3,94 @@ import IngredientInput from "./components/IngredientInput";
 import PreferencePanel from "./components/PreferencePanel";
 import RecipeList from "./components/RecipeList";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3001";
+
 function App() {
-  // Ingredient state
   const [ingredients, setIngredients] = useState([]);
-
-  // Recipe results state
   const [recipes, setRecipes] = useState([]);
-
-  // Loading state for API calls
   const [loading, setLoading] = useState(false);
-
-  // User preferences
+  const [error, setError] = useState("");
+  const [activeInput, setActiveInput] = useState("photo");
   const [preferences, setPreferences] = useState({
     diet: "veg",
+    timeMinutes: "any",
     cuisine: "any",
-    time: "any",
-    nutritionalGoal: "none",
     leftoverMinimizer: true,
+    nutritionalGoal: "none",
   });
 
-  return (
-    <div className="min-h-screen bg-slate-100">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-green-600 to-orange-500 text-white shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <h1 className="text-4xl md:text-5xl font-bold">
-            🍳 ChefMate AI
-          </h1>
+  const findRecipes = async () => {
+    if (ingredients.length === 0) {
+      setError("Add at least one ingredient before searching for recipes.");
+      setRecipes([]);
+      return;
+    }
 
-          <p className="mt-2 text-lg opacity-90">
-            Cook smarter. Waste less.
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/get-recipes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ingredients,
+          preferences,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to fetch recipes.");
+      }
+
+      setRecipes(Array.isArray(data.recipes) ? data.recipes : []);
+    } catch (error) {
+      console.error(error);
+      setError(error.message);
+      setRecipes([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-stone-50 text-slate-900">
+      <header className="bg-gradient-to-r from-emerald-700 via-lime-600 to-orange-500 text-white shadow-lg">
+        <div className="mx-auto max-w-7xl px-5 py-7 sm:px-6">
+          <h1 className="text-4xl font-bold tracking-normal md:text-5xl">
+            ChefMate AI
+          </h1>
+          <p className="mt-2 max-w-2xl text-base text-white/90 md:text-lg">
+            Smart recipe suggestions from your fridge, grocery list, and cooking preferences.
           </p>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto p-6">
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Left Sidebar */}
-          <div className="space-y-6">
+      <main className="mx-auto max-w-7xl px-5 py-6 sm:px-6">
+        <div className="grid gap-6 lg:grid-cols-[380px_1fr]">
+          <aside className="space-y-6">
             <IngredientInput
+              apiBaseUrl={API_BASE_URL}
               ingredients={ingredients}
               setIngredients={setIngredients}
+              onFindRecipes={findRecipes}
+              activeInput={activeInput}
+              setActiveInput={setActiveInput}
             />
 
             <PreferencePanel
               preferences={preferences}
               setPreferences={setPreferences}
             />
-          </div>
+          </aside>
 
-          {/* Right Content Area */}
-          <div className="lg:col-span-2">
-            <RecipeList
-              recipes={recipes}
-              loading={loading}
-            />
-          </div>
+          <section>
+            <RecipeList recipes={recipes} loading={loading} error={error} />
+          </section>
         </div>
       </main>
     </div>

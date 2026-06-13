@@ -1,7 +1,17 @@
-export default function PreferencePanel({
-  preferences,
-  setPreferences,
-}) {
+/**
+ * Preference controls used to personalize recipe search and ranking.
+ * @param {{
+ * preferences: {
+ * diet: string,
+ * timeMinutes: string,
+ * cuisine: string,
+ * leftoverMinimizer: boolean,
+ * nutritionalGoal: string
+ * },
+ * setPreferences: (updater: function) => void
+ * }} props
+ */
+export default function PreferencePanel({ preferences, setPreferences }) {
   const updatePreference = (key, value) => {
     setPreferences((prev) => ({
       ...prev,
@@ -10,161 +20,122 @@ export default function PreferencePanel({
   };
 
   const buttonClass = (active) =>
-    `px-3 py-2 rounded-lg border transition ${
+    `rounded-lg border px-3 py-2 text-sm font-medium transition ${
       active
-        ? "bg-green-600 text-white border-green-600"
-        : "bg-white hover:bg-slate-100"
+        ? "border-emerald-700 bg-emerald-700 text-white"
+        : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
     }`;
 
   return (
-    <div className="bg-white rounded-xl shadow p-6">
-      <h2 className="text-xl font-semibold mb-6">
-        Your Preferences
-      </h2>
+    <div className="rounded-lg bg-white p-5 shadow-sm ring-1 ring-slate-200">
+      <h2 className="mb-6 text-xl font-semibold">Your Preferences</h2>
 
-      {/* Diet */}
       <div className="mb-6">
-        <label className="block font-medium mb-2">
-          Dietary Mode
-        </label>
-
-        <div className="flex gap-2 flex-wrap">
+        <label className="mb-2 block font-medium">Dietary Mode</label>
+        <div className="flex flex-wrap gap-2">
           <button
-            className={buttonClass(
-              preferences.diet === "veg"
-            )}
-            onClick={() =>
-              updatePreference("diet", "veg")
-            }
+            type="button"
+            className={buttonClass(preferences.diet === "veg")}
+            onClick={() => updatePreference("diet", "veg")}
           >
-            🌱 Veg
+            Veg
           </button>
-
           <button
-            className={buttonClass(
-              preferences.diet === "eggetarian"
-            )}
-            onClick={() =>
-              updatePreference("diet", "eggetarian")
-            }
+            type="button"
+            className={buttonClass(preferences.diet === "eggetarian")}
+            onClick={() => updatePreference("diet", "eggetarian")}
           >
-            🥚 Eggetarian
+            Eggetarian
           </button>
-
           <button
-            className={buttonClass(
-              preferences.diet === "non-veg"
-            )}
-            onClick={() =>
-              updatePreference("diet", "non-veg")
-            }
+            type="button"
+            className={buttonClass(preferences.diet === "non-veg")}
+            onClick={() => updatePreference("diet", "non-veg")}
           >
-            🍗 Non-Veg
+            Non-Veg
           </button>
         </div>
       </div>
 
-      {/* Time */}
       <div className="mb-6">
-        <label className="block font-medium mb-2">
-          Time Available
-        </label>
-
-        <div className="flex gap-2 flex-wrap">
+        <label className="mb-2 block font-medium">Time Available</label>
+        <div className="flex flex-wrap gap-2">
           {["15", "30", "60", "any"].map((time) => (
             <button
               key={time}
-              className={buttonClass(
-                preferences.time === time
-              )}
-              onClick={() =>
-                updatePreference("time", time)
-              }
+              type="button"
+              className={buttonClass(preferences.timeMinutes === time)}
+              onClick={() => updatePreference("timeMinutes", time)}
             >
-              {time === "any"
-                ? "⏳ Any"
-                : `⏱ ${time} min`}
+              {time === "any" ? "Any" : `${time} min`}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Cuisine */}
       <div className="mb-6">
-        <label className="block font-medium mb-2">
-          Cuisine
-        </label>
-
+        <label className="mb-2 block font-medium">Cuisine</label>
         <select
           value={preferences.cuisine}
-          onChange={(e) =>
-            updatePreference(
-              "cuisine",
-              e.target.value
-            )
-          }
-          className="w-full border rounded-lg p-2"
+          onChange={(event) => updatePreference("cuisine", event.target.value)}
+          className="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
         >
           <option value="any">Any</option>
           <option value="indian">Indian</option>
           <option value="italian">Italian</option>
           <option value="chinese">Chinese</option>
           <option value="mexican">Mexican</option>
-          <option value="mediterranean">
-            Mediterranean
-          </option>
+          <option value="mediterranean">Mediterranean</option>
+          <option value="thai">Thai</option>
+          <option value="american">American</option>
         </select>
       </div>
 
-      {/* Waste Minimizer */}
       <div className="mb-6">
-        <label className="flex items-center justify-between">
-          <span>
-            ♻️ Use what I have
+        <label className="flex items-center justify-between gap-3">
+          <span className="text-sm font-medium">
+            Use what I have (minimize leftovers)
           </span>
-
-          <input
-            type="checkbox"
-            checked={
-              preferences.leftoverMinimizer
+          <button
+            type="button"
+            onClick={() =>
+              updatePreference("leftoverMinimizer", !preferences.leftoverMinimizer)
             }
-            onChange={(e) =>
-              updatePreference(
-                "leftoverMinimizer",
-                e.target.checked
-              )
-            }
-          />
+            className={`flex h-7 w-14 items-center rounded-full px-1 transition ${
+              preferences.leftoverMinimizer ? "bg-orange-500" : "bg-slate-300"
+            }`}
+            aria-pressed={preferences.leftoverMinimizer}
+          >
+            <span
+              className={`h-5 w-5 rounded-full bg-white shadow transition ${
+                preferences.leftoverMinimizer ? "translate-x-7" : "translate-x-0"
+              }`}
+            />
+          </button>
         </label>
+        {preferences.leftoverMinimizer ? (
+          <span className="mt-2 inline-block rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-700">
+            ON
+          </span>
+        ) : null}
       </div>
 
-      {/* Nutrition */}
       <div>
-        <label className="block font-medium mb-2">
-          Nutrition Goal
-        </label>
-
-        <div className="flex gap-2 flex-wrap">
+        <label className="mb-2 block font-medium">Nutritional Goal</label>
+        <div className="flex flex-wrap gap-2">
           {[
-            "none",
-            "high-protein",
-            "low-carb",
-            "weight-loss",
-          ].map((goal) => (
+            ["none", "None"],
+            ["high-protein", "High Protein"],
+            ["low-carb", "Low Carb"],
+            ["weight-loss", "Weight Loss"],
+          ].map(([goal, label]) => (
             <button
               key={goal}
-              className={buttonClass(
-                preferences.nutritionalGoal ===
-                  goal
-              )}
-              onClick={() =>
-                updatePreference(
-                  "nutritionalGoal",
-                  goal
-                )
-              }
+              type="button"
+              className={buttonClass(preferences.nutritionalGoal === goal)}
+              onClick={() => updatePreference("nutritionalGoal", goal)}
             >
-              {goal}
+              {label}
             </button>
           ))}
         </div>
