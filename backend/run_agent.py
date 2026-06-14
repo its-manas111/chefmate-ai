@@ -12,10 +12,22 @@ from agent_framework_foundry import FoundryAgent
 from azure.identity.aio import DefaultAzureCredential
 
 load_dotenv()
+print("Endpoint:", os.getenv("AZURE_AI_PROJECT_ENDPOINT"))
 
 # User inputs for the conversation
 USER_INPUTS = [
-    "Hello",
+    """
+{
+  "ingredients": ["tomato", "onion", "paneer"],
+  "preferences": {
+    "diet": "veg",
+    "timeMinutes": 30,
+    "cuisine": "Indian",
+    "leftoverMinimizer": true,
+    "nutritionalGoal": "none"
+  }
+}
+"""
 ]
 
 async def main() -> None:
