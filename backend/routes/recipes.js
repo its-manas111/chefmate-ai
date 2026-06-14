@@ -3,7 +3,7 @@ import { getRecipesFromAgent } from "../services/agentService.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const { ingredients, preferences } = req.body;
 
@@ -13,11 +13,14 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const result = await getRecipesFromAgent(ingredients, preferences);
+    const result = await getRecipesFromAgent(
+      ingredients,
+      preferences
+    );
 
-    res.json(result);
+    return res.json(result);
   } catch (error) {
-    throw error;
+    return next(error);
   }
 });
 

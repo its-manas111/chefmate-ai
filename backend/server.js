@@ -1,3 +1,4 @@
+
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -35,9 +36,17 @@ app.use((error, req, res, next) => {
     return next(error);
   }
 
-  return res.status(error.status || 500).json({
+  const payload = {
     error: error.message || "Unexpected server error.",
-  });
+  };
+
+  // Include details/stacktrace in non-production for easier debugging
+  if (process.env.NODE_ENV !== "production") {
+    if (error.details) payload.details = error.details;
+    if (error.stack) payload.stack = error.stack;
+  }
+
+  return res.status(error.status || 500).json(payload);
 });
 
 const PORT = process.env.PORT || 3001;

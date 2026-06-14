@@ -42,6 +42,7 @@ function App() {
       });
 
       const data = await response.json();
+      console.log("API Response:", data);
 
       if (!response.ok) {
         throw new Error(data.error || "Failed to fetch recipes.");
