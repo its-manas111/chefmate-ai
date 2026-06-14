@@ -22,29 +22,29 @@ ChefMate AI is a full-stack recipe assistant that helps users discover meals fro
 ## Repository Structure
 
 - `backend/`
-  - `server.js` � Express API server
+  - `server.js` Express API server
   - `routes/`
-    - `ingredients.js` � image upload and ingredient extraction endpoint
-    - `recipes.js` � recipe generation endpoint
+    - `ingredients.js` image upload and ingredient extraction endpoint
+    - `recipes.js` recipe generation endpoint
   - `services/`
-    - `visionService.js` � Azure OpenAI vision request and parsing
-    - `agentService.js` � executes `agent_wrapper.py` and parses output
-  - `agent_wrapper.py` � Python wrapper that calls a Foundry agent
-  - `package.json` � backend dependencies and scripts
+    - `visionService.js` Azure OpenAI vision request and parsing
+    - `agentService.js` executes `agent_wrapper.py` and parses output
+  - `agent_wrapper.py` Python wrapper that calls a Foundry agent
+  - `package.json` backend dependencies and scripts
 
 - `frontend/`
   - `src/`
-    - `App.jsx` � main app logic and API calls
-    - `main.jsx` � React entry point
-    - `components/` � UI components
+    - `App.jsx` main app logic and API calls
+    - `main.jsx` React entry point
+    - `components/` UI components
       - `IngredientInput.jsx`
       - `PreferencePanel.jsx`
       - `RecipeList.jsx`
       - `RecipeCard.jsx`
       - `LoadingSpinner.jsx`
-  - `package.json` � frontend dependencies and scripts
-  - `vite.config.js` � Vite config
-  - `index.html` � app shell
+  - `package.json` frontend dependencies and scripts
+  - `vite.config.js` Vite config
+  - `index.html` app shell
 
 - `Hackathon/`
   - Additional documentation and rules unrelated to app logic
