@@ -34,6 +34,8 @@ export default function IngredientInput({
     setIngredients([...new Set([...ingredients, ...normalized])]);
   };
 
+
+
   const addIngredients = () => {
     if (!input.trim()) return;
 
@@ -77,6 +79,9 @@ export default function IngredientInput({
       }
 
       mergeIngredients(Array.isArray(data.ingredients) ? data.ingredients : []);
+      // Reset image after successful extraction
+        setSelectedImage(null);
+        setPreviewUrl("");
     } catch (error) {
       setUploadError(error.message);
     } finally {
