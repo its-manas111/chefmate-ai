@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChefMate AI Code Flow Diagram</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'strict' });
+    </script>
+    <style>
+      :root { color: #0f172a; background: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%); }
+      header { padding: 2rem 1.5rem 1rem; text-align: center; background: rgba(15, 23, 42, 0.96); color: #f8fafc; }
+      header h1 { margin: 0; font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
+      header p { margin: 0.6rem auto 0; max-width: 760px; color: #cbd5e1; line-height: 1.6; font-size: 0.95rem; }
+      nav { display: flex; justify-content: center; gap: 0.7rem; flex-wrap: wrap; margin-top: 1rem; }
+      nav a { display: inline-flex; align-items: center; justify-content: center; min-width: 120px; padding: 0.6rem 0.85rem; border-radius: 999px; background: rgba(255,255,255,0.08); color: #38bdf8; text-decoration: none; font-weight: 600; transition: transform 0.18s ease, background 0.18s ease; }
+      nav a:hover { transform: translateY(-1px); background: rgba(255,255,255,0.16); }
+      main { width: min(980px, 100%); margin: 0 auto; padding: 0 1rem 3rem; }
+      .card { background: rgba(255,255,255,0.96); border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 1rem; padding: 1.25rem; box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06); margin-bottom: 1.25rem; }
+      .card h2 { margin-top: 0; font-size: 1.1rem; }
+      .card p { color: #475569; line-height: 1.6; }
+      .diagram { background: #ffffff; border-radius: 0.9rem; padding: 0.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+      .diagram-inner { width: 100%; max-width: 820px; overflow: auto; border-radius: 0.6rem; padding: 0.5rem; background: linear-gradient(180deg, #fbfdff 0%, #f8fafc 100%); }
+      .mermaid { margin: 0 auto; }
+      .mermaid svg { width: 100%; height: auto; transform-origin: 0 0; }
+      .controls { display:flex; gap:0.5rem; align-items:center; }
+      .btn { background:#0f172a;color:#fff;border:none;padding:0.45rem 0.6rem;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem }
+      .btn:active{transform:translateY(1px)}
+      .legend { font-size:0.9rem;color:#475569;margin-top:0.25rem }
+      .footer-link { display: inline-block; margin-top: 0.6rem; color: #0f766e; font-weight: 600; text-decoration: none; }
+      .footer-link:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Complete Code Flow</h1>
+      <p>Follow the full request lifecycle from the React frontend to the Express backend, image extraction, and Foundry-based recipe generation.</p>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="high-level.html">High Level</a>
+        <a href="architecture.html">Architecture</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>How it works</h2>
+        <p>This diagram outlines the actual code path. It highlights the React app, Express routes, the Python wrapper, and the Azure Vision flow for ingredient extraction.</p>
+      </section>
+
+      <section class="card diagram">
+        <div class="controls">
+          <div style="flex:1"></div>
+          <div class="legend">Zoom:</div>
+          <button id="zoom-out" class="btn">−</button>
+          <button id="zoom-reset" class="btn">Reset</button>
+          <button id="zoom-in" class="btn">+</button>
+        </div>
+        <div class="diagram-inner">
+        <div class="mermaid">
+          flowchart TB
+            subgraph Frontend[Frontend Components]
+              A["App.jsx"]
+              B["RecipeList UI"]
+              C["IngredientInput UI"]
+            end
+            subgraph Backend[Backend Components]
+              D["server.js"]
+              E["routes/recipes.js"]
+              F["routes/ingredients.js"]
+              G["services/agentService.js"]
+              H["services/visionService.js"]
+            end
+            subgraph Python[Python Layer]
+              I["agent_wrapper.py"]
+            end
+
+            U["User"] --> A
+            A -->|"POST /api/get-recipes"| D
+            D -->|"route /api/get-recipes"| E
+            E -->|"getRecipesFromAgent(...)"| G
+            G -->|"exec python agent_wrapper.py"| I
+            I -->|"recipe JSON"| G
+            G -->|"result payload"| E
+            E -->|"response"| D
+            D -->|"HTTP response"| A
+            A -->|"render recipe cards"| B
+
+            A -->|"submit image/text"| D
+            D -->|"route /api/extract-ingredients"| F
+            F -->|"extractIngredientsFromImage(...)"| H
+            H -->|"Azure Vision request"| V["Azure OpenAI Vision"]
+            V -->|"json ingredients"| H
+            H -->|"normalized list"| F
+            F -->|"response"| A
+
+            classDef frontend fill:#dbeafe,stroke:#2563eb,stroke-width:2px,rx:6,ry:6;
+            classDef backend fill:#ffffff,stroke:#0f172a,stroke-width:1.8,rx:6,ry:6;
+            classDef python fill:#fff4e6,stroke:#c2410c,stroke-width:1.8,rx:6,ry:6;
+            classDef ai fill:#f0fdf4,stroke:#4d7c0f,stroke-width:1.8,rx:6,ry:6;
+            class A,B,C frontend;
+            class D,E,F,G,H backend;
+            class I python;
+            class V ai;
+        </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>What to remember</h2>
+        <p>The frontend handles user interaction and submissions. The backend routes requests and delegates AI work: vision extraction for images and recipe generation through the Python/Foundry agent wrapper.</p>
+        <a class="footer-link" href="index.html">← Back to documentation index</a>
+      </section>
+    </main>
+    <script>
+      // Simple zoom controls that scale the mermaid svg
+      (function(){
+        const out = document.getElementById('zoom-out');
+        const reset = document.getElementById('zoom-reset');
+        const inc = document.getElementById('zoom-in');
+        const container = document.querySelector('.diagram-inner');
+        let scale = 1;
+
+        function applyScale(){
+          const svg = container.querySelector('.mermaid svg');
+          if(!svg) return;
+          svg.style.transform = `scale(${scale})`;
+          svg.style.transformOrigin = '0 0';
+          try{
+            const bbox = svg.getBBox();
+            container.style.height = Math.min(window.innerHeight * 0.72, bbox.height * scale + 40) + 'px';
+          }catch(e){
+            container.style.height = Math.min(window.innerHeight * 0.72, 600 * scale) + 'px';
+          }
+        }
+
+        inc?.addEventListener('click',()=>{ scale = Math.min(scale + 0.15, 3); applyScale(); });
+        out?.addEventListener('click',()=>{ scale = Math.max(scale - 0.15, 0.4); applyScale(); });
+        reset?.addEventListener('click',()=>{ scale = 1; applyScale(); });
+
+        // Apply once mermaid finishes rendering
+        document.addEventListener('DOMContentLoaded',()=>{
+          setTimeout(applyScale,600);
+        });
+        // also re-apply on window resize
+        window.addEventListener('resize',()=>setTimeout(applyScale,200));
+      })();
+    </script>
+  </body>
+</html>

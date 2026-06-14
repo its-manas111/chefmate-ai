@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChefMate AI Architecture Diagram</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'strict' });
+    </script>
+    <style>
+      :root { color: #0f172a; background: #f8fafc; font-family: Inter, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%); }
+      header { padding: 2rem 1.5rem 1rem; text-align: center; background: rgba(15, 23, 42, 0.96); color: #f8fafc; }
+      header h1 { margin: 0; font-size: clamp(2rem, 2.8vw, 3rem); }
+      header p { margin: 0.75rem auto 0; max-width: 760px; color: #cbd5e1; line-height: 1.7; }
+      nav { display: flex; justify-content: center; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.5rem; }
+      nav a { display: inline-flex; align-items: center; justify-content: center; min-width: 140px; padding: 0.75rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.11); color: #38bdf8; text-decoration: none; font-weight: 600; transition: transform 0.2s ease, background 0.2s ease; }
+      nav a:hover { transform: translateY(-1px); background: rgba(255,255,255,0.18); }
+      main { width: min(1100px, 100%); margin: 0 auto; padding: 0 1.25rem 3rem; }
+      .card { background: rgba(255,255,255,0.92); border: 1px solid rgba(148, 163, 184, 0.24); border-radius: 1.5rem; padding: 1.75rem; box-shadow: 0 28px 70px rgba(15, 23, 42, 0.08); margin-bottom: 1.5rem; }
+      .card h2 { margin-top: 0; font-size: 1.25rem; }
+      .card p { color: #475569; line-height: 1.75; }
+      .diagram { background: #f8fafc; border-radius: 1.25rem; padding: 1rem; }
+      code { background: rgba(148, 163, 184, 0.14); padding: 0.18rem 0.35rem; border-radius: 0.4rem; }
+      .footer-link { display: inline-block; margin-top: 1rem; color: #0f766e; font-weight: 600; text-decoration: none; }
+      .footer-link:hover { text-decoration: underline; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Foundry and Copilot Architecture</h1>
+      <p>Visualize the runtime AI flow and the developer workflow support provided by GitHub Copilot.</p>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="high-level.html">High Level</a>
+        <a href="flow.html">Flow</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Overview</h2>
+        <p>This page clarifies two roles: the runtime architecture powered by Foundry and Azure AI, and the development assistance pattern powered by GitHub Copilot. It keeps the diagram focused and easy to scan.</p>
+      </section>
+
+      <section class="card diagram">
+        <div class="mermaid">
+          graph LR
+            U[User] --> FR[React Frontend]
+            FR --> API[Express API Server]
+            API --> V[Azure OpenAI Vision]
+            API --> PY[Python Wrapper]
+            PY --> FND[Microsoft Foundry Agent]
+            FND -->|"prompts & completions"| AI[Azure AI / OpenAI Models]
+            subgraph Development[Developer Workflow]
+              GC[GitHub Copilot]
+            end
+            GC -->|"code assistance"| FR
+            GC -->|"code assistance"| API
+            GC -->|"code assistance"| PY
+            GC -->|"docs + architecture support"| R[README / docs]
+            classDef runtime fill:#fbf7d5,stroke:#caa832,stroke-width:2px;
+            classDef dev fill:#e2e8f0,stroke:#2563eb,stroke-width:2px;
+            class FR,API,V,PY,FND,AI runtime;
+            class U runtime;
+            class GC,R dev;
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Key points</h2>
+        <p><strong>Microsoft Foundry</strong> is represented by the Python wrapper and agent layer. It is the core runtime path for generating recipe recommendations from structured prompts.</p>
+        <p><strong>GitHub Copilot</strong> is shown as a non-runtime tool that helps developers implement and document the project. It completes code suggestions but is not part of the deployed application flow.</p>
+        <a class="footer-link" href="index.html">← Back to documentation index</a>
+      </section>
+    </main>
+  </body>
+</html>
