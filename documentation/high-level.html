@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChefMate AI High Level Diagram</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'strict' });
+    </script>
+    <style>
+      :root {
+        color: #0f172a;
+        background: #f8fafc;
+        font-family: Inter, system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%); }
+      header {
+        padding: 2rem 1.5rem 1.5rem;
+        text-align: center;
+        background: rgba(15, 23, 42, 0.96);
+        color: #f8fafc;
+      }
+      header h1 { margin: 0; font-size: clamp(2rem, 2.8vw, 3rem); }
+      header p { margin: 0.85rem auto 0; max-width: 720px; color: #cbd5e1; }
+      nav {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 1.5rem;
+      }
+      nav a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #38bdf8;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 0.7rem 1rem;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.08);
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+      nav a:hover { background: rgba(255,255,255,0.18); transform: translateY(-1px); }
+      main { width: min(1100px, 100%); margin: -1.5rem auto 3rem; padding: 0 1.25rem; }
+      .card {
+        background: rgba(255,255,255,0.92);
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 1.5rem;
+        padding: 1.75rem;
+        box-shadow: 0 28px 70px rgba(15, 23, 42, 0.08);
+        margin-bottom: 1.5rem;
+      }
+      .card h2 { margin-top: 0; font-size: 1.25rem; }
+      .card p { color: #475569; line-height: 1.75; }
+      .diagram {
+        background: #f8fafc;
+        border-radius: 1.25rem;
+        padding: 1rem;
+      }
+      .footer-link { color: #0f766e; text-decoration: none; font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>High Level Architecture</h1>
+      <p>Understand the main ChefMate AI components and the high-level flow from user activity to AI-powered recipe generation.</p>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="flow.html">Code Flow</a>
+        <a href="architecture.html">Architecture</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Overview</h2>
+        <p>This diagram maps the major systems: the React + Vite frontend, the Express API backend, Azure OpenAI Vision, and the Python Foundry wrapper. It keeps interactions easy to scan and focuses on the main request/response relationships.</p>
+      </section>
+
+      <section class="card diagram">
+        <div class="mermaid">
+          graph TD
+            U[User] -->|Interact with UI| F[React + Vite Frontend]
+            F -->|API request| B[Express Backend]
+            B -->|image extraction| V[Azure OpenAI Vision]
+            B -->|recipe generation| P[Python Foundry Wrapper]
+            V -->|ingredients| B
+            P -->|recipes| B
+            B -->|response| F
+            F -->|display results| U
+            subgraph AI Services
+              V
+              P
+            end
+            classDef user fill:#e2e8f0,stroke:#94a3b8,stroke-width:2px;
+            classDef frontend fill:#dbeafe,stroke:#3b82f6,stroke-width:2px;
+            classDef backend fill:#f8fafc,stroke:#0f172a,stroke-width:2px;
+            classDef ai fill:#ecfccb,stroke:#4d7c0f,stroke-width:2px;
+            class U user;
+            class F frontend;
+            class B backend;
+            class V,P ai;
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Key takeaway</h2>
+        <p>The solution is intentionally layered: UI handles user input, the API manages routing, vision extracts ingredients, and the Python/Foundry layer generates recipes. This separation makes the system easier to maintain and extend.</p>
+        <p class="footer-link"><a href="index.html">← Back to documentation index</a></p>
+      </section>
+    </main>
+  </body>
+</html>

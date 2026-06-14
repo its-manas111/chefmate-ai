@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChefMate AI Documentation</title>
+    <style>
+      :root {
+        color-scheme: light;
+        color: #0f172a;
+        background: #f8fafc;
+        font-family: Inter, system-ui, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: radial-gradient(circle at top, rgba(56, 189, 248, 0.12), transparent 40%), #f8fafc;
+      }
+      header {
+        padding: 2rem 1.5rem;
+        text-align: center;
+        background: rgba(15, 23, 42, 0.96);
+        color: #f8fafc;
+      }
+      header h1 {
+        margin: 0;
+        font-size: clamp(2rem, 2.75vw, 3rem);
+        letter-spacing: -0.03em;
+      }
+      header p {
+        margin: 0.75rem auto 0;
+        max-width: 760px;
+        color: #cbd5e1;
+        font-size: 1rem;
+      }
+      main {
+        width: min(1100px, 100%);
+        margin: 0 auto;
+        padding: 2rem 1.25rem 3rem;
+      }
+      .grid {
+        display: grid;
+        gap: 1.25rem;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.88);
+        border: 1px solid rgba(148, 163, 184, 0.24);
+        border-radius: 1.25rem;
+        padding: 1.5rem;
+        box-shadow: 0 22px 60px rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(12px);
+      }
+      .card h2 {
+        margin-top: 0;
+        font-size: 1.25rem;
+      }
+      .card ul {
+        margin: 1rem 0 0;
+        padding-left: 1.25rem;
+        color: #334155;
+      }
+      .card li {
+        margin-bottom: 0.8rem;
+        line-height: 1.6;
+      }
+      a {
+        color: #0f766e;
+        text-decoration: none;
+        font-weight: 600;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .note {
+        color: #475569;
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>ChefMate AI Documentation</h1>
+      <p>Streamlined Mermaid visualizations for understanding the architecture, request flow, and Foundry + Copilot design of ChefMate AI.</p>
+    </header>
+
+    <main>
+      <section class="grid">
+        <article class="card">
+          <h2>Explore the diagrams</h2>
+          <ul>
+            <li><a href="high-level.html">High Level Diagram</a> — clear overview of the system boundaries and major components.</li>
+            <li><a href="flow.html">Complete Code Flow Diagram</a> — detailed request lifecycle from UI to recipe generation.</li>
+            <li><a href="architecture.html">Architecture Diagram</a> — shows how Microsoft Foundry and GitHub Copilot support the project.</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Quick start</h2>
+          <p class="note">Use the navigation links above or open individual pages directly. Each diagram page includes a short explanation below the Mermaid visualization to keep the architecture easy to understand.</p>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
