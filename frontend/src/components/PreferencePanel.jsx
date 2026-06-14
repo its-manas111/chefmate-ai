@@ -19,126 +19,181 @@ export default function PreferencePanel({ preferences, setPreferences }) {
     }));
   };
 
+  // Diet options with icons and labels
+  const dietOptions = [
+    { value: "veg", label: "Vegetarian", icon: "🥗", color: "from-green-500 to-emerald-600" },
+    { value: "eggetarian", label: "Eggetarian", icon: "🍳", color: "from-amber-500 to-orange-600" },
+    { value: "non-veg", label: "Non-Veg", icon: "🍖", color: "from-red-500 to-rose-600" },
+  ];
+
+  const timeOptions = [
+    { value: "15", label: "15 mins", icon: "⚡" },
+    { value: "30", label: "30 mins", icon: "⏱️" },
+    { value: "60", label: "60 mins", icon: "🕒" },
+    { value: "any", label: "Any time", icon: "∞" },
+  ];
+
+  const cuisineOptions = [
+    { value: "any", label: "Any", icon: "🌍" },
+    { value: "indian", label: "Indian", icon: "🇮🇳" },
+    { value: "italian", label: "Italian", icon: "🍝" },
+    { value: "chinese", label: "Chinese", icon: "🥡" },
+    { value: "mexican", label: "Mexican", icon: "🌮" },
+    { value: "mediterranean", label: "Mediterranean", icon: "🫒" },
+    { value: "thai", label: "Thai", icon: "🌶️" },
+  ];
+
+  const nutritionOptions = [
+    { value: "none", label: "None", icon: "🌟" },
+    { value: "high-protein", label: "High Protein", icon: "💪" },
+    { value: "weight-loss", label: "Weight Loss", icon: "🥬" },
+    { value: "low-carb", label: "Low Carb", icon: "🥑" },
+  ];
+
   const buttonClass = (active) =>
-    `rounded-lg border px-3 py-2 text-sm font-medium transition ${
+    `relative px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 ${
       active
-        ? "border-emerald-700 bg-emerald-700 text-white"
-        : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+        ? "ring-2 ring-emerald-500 shadow-lg shadow-emerald-500/20 scale-105"
+        : "ring-1 ring-slate-200 hover:ring-slate-300 hover:shadow-md"
     }`;
 
-  return (
-    <div className="rounded-lg bg-white p-5 shadow-sm ring-1 ring-slate-200">
-      <h2 className="mb-6 text-xl font-semibold">Your Preferences</h2>
+  const dietButtonClass = (value) => {
+    const isActive = preferences.diet === value;
+    const option = dietOptions.find((opt) => opt.value === value);
+    return `relative px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 overflow-hidden group ${
+      isActive
+        ? `ring-2 ring-slate-900 shadow-lg scale-105 text-white`
+        : "ring-1 ring-slate-200 hover:ring-slate-300 hover:shadow-md text-slate-700"
+    }`;
+  };
 
-      <div className="mb-6">
-        <label className="mb-2 block font-medium">Dietary Mode</label>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            className={buttonClass(preferences.diet === "veg")}
-            onClick={() => updatePreference("diet", "veg")}
-          >
-            Veg
-          </button>
-          <button
-            type="button"
-            className={buttonClass(preferences.diet === "eggetarian")}
-            onClick={() => updatePreference("diet", "eggetarian")}
-          >
-            Eggetarian
-          </button>
-          <button
-            type="button"
-            className={buttonClass(preferences.diet === "non-veg")}
-            onClick={() => updatePreference("diet", "non-veg")}
-          >
-            Non-Veg
-          </button>
+  return (
+    <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200/50 hover:ring-slate-300/50 transition-all duration-300">
+      <h2 className="mb-1 text-lg font-semibold text-slate-900">Preferences</h2>
+      <p className="mb-6 text-xs text-slate-500">Customize your search</p>
+
+      {/* Diet Section */}
+      <div className="mb-8">
+        <label className="mb-3 block text-xs font-bold uppercase tracking-wide text-slate-700">
+          📋 Dietary Mode
+        </label>
+        <div className="grid grid-cols-3 gap-2">
+          {dietOptions.map((option) => {
+            const isActive = preferences.diet === option.value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => updatePreference("diet", option.value)}
+                className={dietButtonClass(option.value)}
+              >
+                {/* Gradient background for active state */}
+                {isActive && (
+                  <div className={`absolute inset-0 bg-gradient-to-br ${option.color} -z-10`} />
+                )}
+                
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <span className="text-lg">{option.icon}</span>
+                  <span className="text-xs leading-tight">{option.label}</span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="mb-6">
-        <label className="mb-2 block font-medium">Time Available</label>
-        <div className="flex flex-wrap gap-2">
-          {["15", "30", "60", "any"].map((time) => (
+      {/* Time Section */}
+      <div className="mb-8">
+        <label className="mb-3 block text-xs font-bold uppercase tracking-wide text-slate-700">
+          ⏱️ Time Available
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {timeOptions.map((option) => (
             <button
-              key={time}
+              key={option.value}
               type="button"
-              className={buttonClass(preferences.timeMinutes === time)}
-              onClick={() => updatePreference("timeMinutes", time)}
+              onClick={() => updatePreference("timeMinutes", option.value)}
+              className={`${buttonClass(preferences.timeMinutes === option.value)} flex items-center justify-center gap-2 bg-white`}
             >
-              {time === "any" ? "Any" : `${time} min`}
+              <span className="text-lg">{option.icon}</span>
+              <span>{option.label}</span>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="mb-6">
-        <label className="mb-2 block font-medium">Cuisine</label>
-        <select
-          value={preferences.cuisine}
-          onChange={(event) => updatePreference("cuisine", event.target.value)}
-          className="w-full rounded-lg border border-slate-300 p-2.5 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
-        >
-          <option value="any">Any</option>
-          <option value="indian">Indian</option>
-          <option value="italian">Italian</option>
-          <option value="chinese">Chinese</option>
-          <option value="mexican">Mexican</option>
-          <option value="mediterranean">Mediterranean</option>
-          <option value="thai">Thai</option>
-          <option value="american">American</option>
-        </select>
+      {/* Cuisine Section */}
+      <div className="mb-8">
+        <label className="mb-3 block text-xs font-bold uppercase tracking-wide text-slate-700">
+          🌍 Cuisine
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {cuisineOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => updatePreference("cuisine", option.value)}
+              className={`${buttonClass(preferences.cuisine === option.value)} flex items-center justify-center gap-2 bg-white`}
+            >
+              <span className="text-lg">{option.icon}</span>
+              <span>{option.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="mb-6">
-        <label className="flex items-center justify-between gap-3">
-          <span className="text-sm font-medium">
-            Use what I have (minimize leftovers)
-          </span>
-          <button
-            type="button"
-            onClick={() =>
-              updatePreference("leftoverMinimizer", !preferences.leftoverMinimizer)
-            }
-            className={`flex h-7 w-14 items-center rounded-full px-1 transition ${
-              preferences.leftoverMinimizer ? "bg-orange-500" : "bg-slate-300"
+      {/* Nutrition Section */}
+      <div className="mb-8">
+        <label className="mb-3 block text-xs font-bold uppercase tracking-wide text-slate-700">
+          🏥 Nutrition Goal
+        </label>
+        <div className="grid grid-cols-2 gap-2">
+          {nutritionOptions.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => updatePreference("nutritionalGoal", option.value)}
+              className={`${buttonClass(preferences.nutritionalGoal === option.value)} flex items-center justify-center gap-2 bg-white`}
+            >
+              <span className="text-lg">{option.icon}</span>
+              <span className="text-xs">{option.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Waste Minimizer Toggle */}
+      <div className="rounded-lg bg-gradient-to-br from-green-50 to-emerald-50 p-4 ring-1 ring-green-200/50">
+        <button
+          type="button"
+          onClick={() =>
+            updatePreference("leftoverMinimizer", !preferences.leftoverMinimizer)
+          }
+          className={`w-full flex items-center justify-between gap-3 transition-all duration-300 ${
+            preferences.leftoverMinimizer ? "opacity-100" : "opacity-75"
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">♻️</span>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-slate-900">Waste Less Mode</p>
+              <p className="text-xs text-slate-600">Prioritize using available ingredients</p>
+            </div>
+          </div>
+
+          {/* Toggle Switch */}
+          <div
+            className={`relative h-6 w-10 rounded-full transition-colors duration-300 ${
+              preferences.leftoverMinimizer ? "bg-emerald-500" : "bg-slate-300"
             }`}
-            aria-pressed={preferences.leftoverMinimizer}
           >
-            <span
-              className={`h-5 w-5 rounded-full bg-white shadow transition ${
-                preferences.leftoverMinimizer ? "translate-x-7" : "translate-x-0"
+            <div
+              className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform duration-300 ${
+                preferences.leftoverMinimizer ? "translate-x-4" : ""
               }`}
             />
-          </button>
-        </label>
-        {preferences.leftoverMinimizer ? (
-          <span className="mt-2 inline-block rounded-full bg-orange-100 px-2 py-0.5 text-xs font-semibold text-orange-700">
-            ON
-          </span>
-        ) : null}
-      </div>
-
-      <div>
-        <label className="mb-2 block font-medium">Nutritional Goal</label>
-        <div className="flex flex-wrap gap-2">
-          {[
-            ["none", "None"],
-            ["high-protein", "High Protein"],
-            ["low-carb", "Low Carb"],
-            ["weight-loss", "Weight Loss"],
-          ].map(([goal, label]) => (
-            <button
-              key={goal}
-              type="button"
-              className={buttonClass(preferences.nutritionalGoal === goal)}
-              onClick={() => updatePreference("nutritionalGoal", goal)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+          </div>
+        </button>
       </div>
     </div>
   );
